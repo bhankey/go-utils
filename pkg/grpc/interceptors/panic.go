@@ -2,6 +2,7 @@ package interceptors
 
 import (
 	"context"
+
 	"github.com/bhankey/go-utils/pkg/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -27,7 +28,7 @@ func (i *PanicInterceptor) ServerInterceptor() grpc.UnaryServerInterceptor {
 	) (resp interface{}, err error) {
 		defer func() {
 			if r := recover(); r != nil {
-				i.log.Errorf("panic happend: %v", r)
+				i.log.Errorf("panic happened: %v", r)
 
 				err = status.New(codes.Internal, "panic").Err()
 			}

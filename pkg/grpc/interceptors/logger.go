@@ -2,11 +2,12 @@ package interceptors
 
 import (
 	"context"
+	"time"
+
 	"github.com/bhankey/go-utils/pkg/logger"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"time"
 )
 
 type LoggerInterceptor struct {

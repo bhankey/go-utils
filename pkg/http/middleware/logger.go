@@ -2,15 +2,21 @@ package middleware
 
 import (
 	"context"
-	"github.com/bhankey/go-utils/pkg/logger"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 
+	"github.com/bhankey/go-utils/pkg/logger"
 	"github.com/pborman/uuid"
+	"github.com/sirupsen/logrus"
 )
 
-const RequestID = "x-request-id"
+const RequestIDHeader = "x-request-id"
+
+type ContextKey int
+
+const (
+	RequestIDKey ContextKey = iota + 1
+)
 
 func wrapResponseWriter(w http.ResponseWriter) *responseWriter {
 	return &responseWriter{ResponseWriter: w}
@@ -40,8 +46,12 @@ func LoggingMiddleware(log logger.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		requestID := uuid.NewUUID().String()
 		f := func(w http.ResponseWriter, r *http.Request) {
+			if r.Header.Get(RequestIDHeader) != "" {
+				requestID = RequestIDHeader
+			}
+
 			ctx := r.Context()
-			ctx = context.WithValue(ctx, RequestID, requestID)
+			ctx = context.WithValue(ctx, RequestIDKey, requestID)
 			r = r.WithContext(ctx)
 
 			defer func() {
