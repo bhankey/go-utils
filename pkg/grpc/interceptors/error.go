@@ -56,7 +56,6 @@ func (i *ErrorHandlingInterceptor) ServerInterceptor() grpc.UnaryServerIntercept
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
 		resp, err := handler(ctx, req)
-
 		if err != nil { // nolint: nestif, nolintlint
 			log := i.log.WithFields(logrus.Fields{
 				"method": info.FullMethod,
